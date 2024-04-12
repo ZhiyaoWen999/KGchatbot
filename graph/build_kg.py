@@ -17,13 +17,18 @@ class KnowledgeGraphBuilder:
         return data
 
     def create_graph(self, data):
-        with self.driver.session() as session:
-            for course in data:
-                self.create_program(session, course)
-                self.create_requirements(session, course)
-                self.create_courses(session, course)
-                self.create_topics(session, course)
-                self.link_course_requirements(session, course)
+        # Batch processing
+        batch_size = 100
+        batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
+        for batch in batches:
+            with self.driver.session() as session:
+                for course in batch:
+                    self.create_program(session, course)
+                    self.create_requirements(session, course)
+                    self.create_courses(session, course)
+                    self.create_topics(session, course)
+                    self.link_course_requirements(session, course)
+            logging.info(f"Processed a batch of {len(batch)} courses")
 
     def create_program(self, session, course):
         logging.info(f"Creating program node for: {course['Program']}")
