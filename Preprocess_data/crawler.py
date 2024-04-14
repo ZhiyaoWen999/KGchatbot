@@ -12,10 +12,10 @@ class UCLCourseScraper:
         self.course_urls = []
 
     def fetch_course_urls(self):
-        """爬取课程URLs并保存到文件"""
+        """crawl course from url"""
         try:
             response = requests.get(self.base_url)
-            response.raise_for_status()  # 确保请求成功
+            response.raise_for_status() 
             soup = BeautifulSoup(response.text, 'html.parser')
             self.course_urls = set(a['href'] for a in soup.find_all('a', href=True) 
                                    if a['href'].startswith(self.base_url))
@@ -27,7 +27,7 @@ class UCLCourseScraper:
             print(f"Failed to fetch course URLs: {e}")
 
     def fetch_course_info(self, url):
-        """爬取单个课程的详细信息"""
+        """fetch the course page information"""
         try:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
@@ -40,7 +40,7 @@ class UCLCourseScraper:
             return None
 
     def crawl_course_pages(self):
-        """并行爬取所有课程页面的信息并保存到JSON文件"""
+        """crawl the course page"""
         with open(self.urls_file, 'r') as f:
             urls = [url.strip() for url in f.readlines()]
 
@@ -62,7 +62,7 @@ class UCLCourseScraper:
         print(f"Finished! Course information has been saved to {self.course_info_file}")
 
     def run(self):
-        """运行爬虫"""
+
         print("Starting to fetch course URLs...")
         self.fetch_course_urls()
         print("Starting to fetch course information...")

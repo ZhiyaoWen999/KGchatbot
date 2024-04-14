@@ -112,7 +112,7 @@ class Chatbot:
         except openai.error.InvalidRequestError as e:
             logging.error(f"API request error: {e}")
             return None, {}
-        except openai.error.OpenAIError as e:  # This will catch any OpenAI error
+        except openai.error.OpenAIError as e: 
             logging.error(f"An error occurred: {e}")
             return None, {}
 

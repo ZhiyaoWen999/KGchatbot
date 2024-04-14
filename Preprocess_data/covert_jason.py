@@ -39,11 +39,10 @@ def save_data(transformed_data, output_file_path):
         json.dump(transformed_data, file, ensure_ascii=False, indent=4)
 
 def main():
-    # Paths to the input and output files
+
     input_file_path = 'data/course_info.json'
     output_file_path = 'data/transformed_course_info.json'
     
-    # Load, transform, and save the data
     original_data = load_data(input_file_path)
     transformed_data = transform_data(original_data)
     save_data(transformed_data, output_file_path)

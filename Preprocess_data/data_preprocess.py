@@ -4,7 +4,7 @@ import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 
-# Ensure necessary NLTK resources are downloaded
+
 nltk.download('punkt')
 nltk.download('stopwords')
 
@@ -35,7 +35,6 @@ class CourseDataProcessor:
         for course in course_data:
             description = self.clean_text(course['Description'])
             course['CleanedDescription'] = description
-            # Additional processing can be added here
             cleaned_data.append(course)
         return cleaned_data
 
@@ -50,7 +49,7 @@ class CourseDataProcessor:
         cleaned_data = self.extract_info(data)
         self.save_data(cleaned_data)
 
-# Example usage
+
 if __name__ == '__main__':
     processor = CourseDataProcessor('data/transformed_course_info.json', 'data/cleaned_data/cleaned_course_info.json')
     processor.process()
