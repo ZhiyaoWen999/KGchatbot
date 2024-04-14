@@ -11,12 +11,11 @@ class Chatbot:
     def close(self):
         self.driver.close()
 
-
-    def query_neo4j(self, intent, entities):
         
+    def query_neo4j(self, intent, entities):
         with self.driver.session() as session:
             if intent == "program_details":
-                program_name = entities["program_name"]
+                program_name = entities.get("program_name", "")
                 result = session.run(
                     "MATCH (p:Program {name: $program_name}) "
                     "RETURN p.description AS description, p.url AS url",
@@ -29,7 +28,7 @@ class Chatbot:
                     return "I couldn't find details for that program."
 
             elif intent == "course_details":
-                course_name = entities["course_name"]
+                course_name = entities.get("course_name", "")
                 result = session.run(
                     "MATCH (c:Course {name: $course_name}) "
                     "RETURN c.name AS name",
@@ -42,13 +41,18 @@ class Chatbot:
                     return "I couldn't find details for that course."
 
             elif intent == "requirements":
-                program_name = entities["program_name"]
+                program_name = entities.get("program_name", "")
+                print(f"Looking up requirements for: {program_name}")
                 result = session.run(
                     "MATCH (p:Program {name: $program_name})-[:HAS_REQUIREMENT]->(r:Requirement) "
                     "RETURN r.description AS description",
                     {"program_name": program_name}
                 )
+                
                 records = result.data()
+                
+                print(f"Fetched records: {records}")
+
                 if records:
                     requirements = '\n'.join(record['description'] for record in records)
                     return f"Requirements for {program_name}:\n{requirements}"
@@ -57,6 +61,8 @@ class Chatbot:
 
             else:
                 return "I'm not sure how to help with that."
+            
+
 
     def generate_response(self, user_input):
         try:
@@ -83,13 +89,13 @@ class Chatbot:
             )
             content = response['choices'][0]['message']['content'].lower()
 
-            print("response**************", response)
-            print("content**************", content)
-            if "program details" in content:
+            # print("response**************", response)
+            # print("content**************", content)
+            if "program_details" in content:
                 intent = "program_details"
                 program_name = text.split("about")[-1].strip()
                 entities = {"program_name": program_name}
-            elif "course details" in content:
+            elif "course_details" in content:
                 intent = "course_details"
                 course_name = text.split("about")[-1].strip()
                 entities = {"course_name": course_name}
@@ -97,6 +103,7 @@ class Chatbot:
                 intent = "requirements"
                 program_name = text.split("for")[-1].strip()
                 entities = {"program_name": program_name}
+                print(program_name)
             else:
                 intent = "unknown"
                 entities = {}

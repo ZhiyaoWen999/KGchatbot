@@ -38,7 +38,7 @@ class QueryHandler:
         """, course_name=course_name)
         return [record["requirement"] for record in result]
 
-# Example usage
+
 if __name__ == "__main__":
     uri = "bolt://localhost:7687"
     user = "neo4j"
@@ -50,3 +50,5 @@ if __name__ == "__main__":
     print("Program Details:", program_details)
 
     query_handler.close()
+
+
