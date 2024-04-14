@@ -41,7 +41,7 @@ pip install -r requirements.txt
 4.Set up environment variables for sensitive data such as the OpenAI API key:
 
 ```bash
-export OPENAI_API_KEY='your_api_key_here'
+openai.api_key ='your_api_key_here'
 ```
 
 ## Usage
