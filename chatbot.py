@@ -152,7 +152,7 @@ if __name__ == "__main__":
     uri = "bolt://localhost:7687"
     user = "neo4j"
     password = "12345678"
-    openai.api_key = ''  
+    openai.api_key = ''   #Your key goes here
 
     chatbot = Chatbot(openai.api_key, uri, user, password)
     try:
