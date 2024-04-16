@@ -16,6 +16,7 @@ class Chatbot:
         with self.driver.session() as session:
             if intent == "program_details":
                 program_name = entities.get("program_name", "")
+                print(f"Looking up program details for: {program_name}")
                 result = session.run(
                     "MATCH (p:Program {name: $program_name}) "
                     "RETURN p.description AS description, p.url AS url",
@@ -29,12 +30,16 @@ class Chatbot:
 
             elif intent == "course_details":
                 course_name = entities.get("course_name", "")
+                print(f"Looking up course details for: {course_name}")
                 result = session.run(
-                    "MATCH (c:Course {name: $course_name}) "
-                    "RETURN c.name AS name",
+                    "MATCH (c:Course) "
+                    "WHERE c.name CONTAINS $course_name "
+                    "RETURN c.name AS name, c.description AS description",
                     {"course_name": course_name}
+                    
                 )
                 record = result.single()
+        
                 if record:
                     return f"Course Details: {record['name']}"
                 else:
