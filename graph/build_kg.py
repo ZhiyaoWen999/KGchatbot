@@ -40,7 +40,7 @@ class KnowledgeGraphBuilder:
         program_attributes = {
             'name': course['Program'],
             'url': course['URL'],
-            'description': course['Description']
+            'description': course['CleanedDescription']
         }
         session.run(program_query, program_attributes)
 

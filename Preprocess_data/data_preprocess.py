@@ -20,11 +20,15 @@ class CourseDataProcessor:
             return json.load(file)
 
     def clean_text(self, text):
-        """Clean and preprocess text by removing non-alphabetical characters,
-        converting to lower case, and removing stopwords."""
+        """Clean and preprocess text by removing specific unwanted prefixes,
+        converting to lower case, and removing stopwords and non-alphabetical characters."""
+        # Remove specific unwanted prefix with possible trailing spaces and any case variation
+        text = re.sub(r'(?i)^menu london, bloomsbury\s*', '', text)
+        
         # Remove non-letter characters and convert to lowercase
         text = re.sub(r'[^a-zA-Z\s]', '', text).lower()
-        # Remove stopwords
+        
+        # Tokenize and remove stopwords
         stop_words = set(stopwords.words('english'))
         words = word_tokenize(text)
         return ' '.join(word for word in words if word not in stop_words)
